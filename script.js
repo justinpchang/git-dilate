@@ -50,12 +50,12 @@ function generateSequentialDates(start, end, count) {
     const randomTime = start.getTime() + Math.random() * timeSpan;
     const date = new Date(randomTime);
 
-    // Randomize time more broadly (5 AM - 11 PM)
+    // Randomize time between 12 PM and 8 PM
     return new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate(),
-      5 + Math.floor(Math.random() * 18), // Hours between 5 AM and 11 PM
+      12 + Math.floor(Math.random() * 9), // Hours between 12 PM and 8 PM
       Math.floor(Math.random() * 60),
       Math.floor(Math.random() * 60),
       Math.floor(Math.random() * 1000) // Add milliseconds for more randomness
