@@ -69,13 +69,31 @@ function initializeTargetRepo() {
   }
   fs.mkdirSync(targetRepo);
   execSync("git init", { cwd: targetRepo });
+
+  // Try to use master branch, fall back to main if master doesn't exist
+  try {
+    execSync("git checkout master", { cwd: targetRepo });
+  } catch (error) {
+    execSync("git checkout -b main", { cwd: targetRepo });
+  }
 }
 
 function getCommits() {
   try {
-    const output = execSync('git log --reverse --pretty=format:"%H"', {
-      cwd: sourceRepo,
-    });
+    // Try master branch first, fall back to main
+    let branch = "master";
+    try {
+      execSync("git show master", { cwd: sourceRepo });
+    } catch {
+      branch = "main";
+    }
+
+    const output = execSync(
+      `git log ${branch} --reverse --pretty=format:"%H"`,
+      {
+        cwd: sourceRepo,
+      }
+    );
     const commits = output.toString().trim().split("\n");
     if (!commits.length) {
       throw new Error("No commits found in source repository");
